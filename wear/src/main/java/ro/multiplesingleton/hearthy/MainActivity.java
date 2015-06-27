@@ -56,6 +56,8 @@ public class MainActivity extends Activity implements OnChangeListener {
                 Log.i(LOG_TAG, "Binding service...");
                 bindService(new Intent(MainActivity.this, HeartBeatMonitor.class),
                             new MainServiceConnection(MainActivity.this), Service.BIND_AUTO_CREATE);
+
+                mTextView.setText("binded");
             }
 
         });
