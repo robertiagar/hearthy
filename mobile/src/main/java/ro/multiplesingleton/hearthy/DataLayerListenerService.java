@@ -1,6 +1,8 @@
 package ro.multiplesingleton.hearthy;
 
+import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 
 import com.google.android.gms.wearable.MessageEvent;
@@ -15,7 +17,7 @@ public class DataLayerListenerService extends WearableListenerService {
     private static final String HEARTBEAT = "HEARTBEAT";
 
     private static Handler handler;
-    private static int currentValue = 0;
+    private static String currentValue = "0";
 
     public static Handler getHandler() {
         return handler;
@@ -25,7 +27,11 @@ public class DataLayerListenerService extends WearableListenerService {
         DataLayerListenerService.handler = handler;
 
         if (handler != null) {
-            handler.sendEmptyMessage(currentValue);
+            Message message = new Message();
+            Bundle bundle = new Bundle();
+            bundle.putCharSequence("message", currentValue);
+            message.setData(bundle);
+            handler.sendMessage(message);
         }
     }
 
@@ -45,9 +51,13 @@ public class DataLayerListenerService extends WearableListenerService {
 
         Log.d(LOG_TAG,"received a message form wear:"+messageEvent.getPath());
 
-        currentValue = Integer.parseInt(messageEvent.getPath());
+        currentValue =messageEvent.getPath();
         if(handler!=null){
-            handler.sendEmptyMessage(currentValue);
+            Message message = new Message();
+            Bundle bundle = new Bundle();
+            bundle.putCharSequence("message",currentValue);
+            message.setData(bundle);
+            handler.sendMessage(message);
         }
     }
 }

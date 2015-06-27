@@ -29,7 +29,7 @@ public class MainActivity extends ActionBarActivity {
         @Override
         public void handleMessage(Message msg){
             if(mTextView!=null){
-                mTextView.setText(Integer.toString(msg.what));
+                mTextView.setText(msg.getData().getCharSequence("message"));
             }
         }
     };

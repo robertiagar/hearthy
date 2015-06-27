@@ -18,6 +18,7 @@ import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.NodeApi;
 import com.google.android.gms.wearable.Wearable;
 
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -33,6 +34,7 @@ public class HeartbeatService extends Service implements SensorEventListener {
 
     public interface OnChangeListener {
         void onValueChanged(int newValue);
+        void onValueChanged(String value);
     }
 
     public class HeartbeatServiceBinder extends Binder {
@@ -53,7 +55,7 @@ public class HeartbeatService extends Service implements SensorEventListener {
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         Sensor mHeartRateSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_HEART_RATE);
 
-        boolean res = mSensorManager.registerListener(this, mHeartRateSensor, SensorManager.SENSOR_DELAY_UI);
+        boolean res = mSensorManager.registerListener(this, mHeartRateSensor, SensorManager.SENSOR_DELAY_NORMAL);
         Log.d(LOG_TAG, "sensor registered:" + (res ? "yes" : "no"));
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -74,15 +76,16 @@ public class HeartbeatService extends Service implements SensorEventListener {
         if (sensorEvent.sensor.getType() == Sensor.TYPE_HEART_RATE && sensorEvent.values.length > 0) {
             int newValue = Math.round(sensorEvent.values[0]);
 
-            if (currentValue != newValue && newValue != 0) {
+            //if (currentValue != newValue && newValue != 0) {
                 currentValue = newValue;
 
                 if (onChangeListener != null) {
                     Log.d(LOG_TAG, "sending new value to listener:" + newValue);
-                    onChangeListener.onValueChanged(newValue);
-                    sendMessageToHandheld(Integer.toString((newValue)));
+                    String message = newValue + Calendar.getInstance().getTime().toString();
+                    onChangeListener.onValueChanged(message);
+                    sendMessageToHandheld(message);
                 }
-            }
+            //}
         }
     }
 

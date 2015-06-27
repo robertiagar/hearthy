@@ -55,4 +55,9 @@ public class MainActivity extends Activity implements HeartbeatService.OnChangeL
     public void onValueChanged(int newValue) {
         mTextView.setText(Integer.toString(newValue));
     }
+
+    @Override
+    public void onValueChanged(String value) {
+        mTextView.setText(value);
+    }
 }
