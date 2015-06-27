@@ -8,67 +8,51 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.wearable.view.WatchViewStub;
-import android.widget.TextView;
 import android.util.Log;
+import android.widget.TextView;
 
-
-class MainServiceConnection implements ServiceConnection {
-    private OnChangeListener listener;
-
-    public MainServiceConnection(OnChangeListener listener) {
-        this.listener = listener;
-    }
-
-    @Override
-    public void onServiceConnected(ComponentName componentName, IBinder binder) {
-        // set our change listener to get change events
-        ((HeartBeatMonitor.ServiceBinder) binder).setChangeListener(this.listener);
-    }
-
-    @Override
-    public void onServiceDisconnected(ComponentName componentName) {
-
-    }
-
-}
-
-public class MainActivity extends Activity implements OnChangeListener {
-
-    private static final String LOG_TAG = "MainActivity";
-
+/**
+ * Created by robert on 27/06/2015.
+ */
+public class MainActivity extends Activity implements HeartbeatService.OnChangeListener {
+    private static final String LOG_TAG = "MyHeart";
     private TextView mTextView;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected  void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-
-        Log.i(LOG_TAG, "Starting...");
         setContentView(R.layout.activity_main);
 
-        final WatchViewStub stub = (WatchViewStub) findViewById(R.id.watch_view_stub);
+        final WatchViewStub stub = (WatchViewStub)findViewById(R.id.watch_view_stub);
         stub.setOnLayoutInflatedListener(new WatchViewStub.OnLayoutInflatedListener() {
             @Override
             public void onLayoutInflated(WatchViewStub stub) {
-                mTextView = (TextView) stub.findViewById(R.id.text);
+                mTextView = (TextView)stub.findViewById(R.id.text);
 
-                mTextView.setText("Updated Hello world!");
+                bindService(new Intent(MainActivity.this, HeartbeatService.class), new ServiceConnection() {
+                    @Override
+                    public void onServiceConnected(ComponentName name, IBinder binder) {
+                        Log.d(LOG_TAG,"connected to service");
 
-                Log.i(LOG_TAG, "Binding service...");
-                Intent intent = new Intent(MainActivity.this, HeartBeatMonitor.class);
-                bindService(intent,
-                        new MainServiceConnection(MainActivity.this), Service.BIND_AUTO_CREATE);
+                        ((HeartbeatService.HeartbeatServiceBinder)binder).setChangeListener(MainActivity.this);
+                    }
 
-                startService(intent);
+                    @Override
+                    public void onServiceDisconnected(ComponentName name) {
 
-                mTextView.setText("binded");
+                    }
+                }, Service.BIND_AUTO_CREATE);
             }
-
         });
     }
 
     @Override
+    public void onResume(){
+        super.onResume();
+    }
+
+    @Override
     public void onValueChanged(int newValue) {
-        String message = "New heartbeat: " + newValue;
-        mTextView.setText(message);
+        mTextView.setText(Integer.toString(newValue));
     }
 }
