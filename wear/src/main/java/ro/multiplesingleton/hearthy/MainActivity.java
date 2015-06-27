@@ -54,8 +54,11 @@ public class MainActivity extends Activity implements OnChangeListener {
                 mTextView.setText("Updated Hello world!");
 
                 Log.i(LOG_TAG, "Binding service...");
-                bindService(new Intent(MainActivity.this, HeartBeatMonitor.class),
-                            new MainServiceConnection(MainActivity.this), Service.BIND_AUTO_CREATE);
+                Intent intent = new Intent(MainActivity.this, HeartBeatMonitor.class);
+                bindService(intent,
+                        new MainServiceConnection(MainActivity.this), Service.BIND_AUTO_CREATE);
+
+                startService(intent);
 
                 mTextView.setText("binded");
             }
