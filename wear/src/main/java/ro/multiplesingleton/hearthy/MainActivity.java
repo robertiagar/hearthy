@@ -73,5 +73,9 @@ public class MainActivity extends Activity implements OnChangeListener, ServiceC
     public void onValueChanged(int newValue) {
         String message = "New heartbeat: " + newValue;
         mTextView.setText(message);
+
+        if (this.phoneMessenger != null) {
+            this.phoneMessenger.sendMessage("heartbeat", newValue);
+        }
     }
 }

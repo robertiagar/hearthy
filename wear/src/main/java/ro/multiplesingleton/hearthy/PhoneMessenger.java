@@ -101,6 +101,16 @@ public class PhoneMessenger extends Service {
         Wearable.MessageApi.sendMessage(client, nodeId, message, null);
     }
 
+    public void sendMessage(String sensorType, int sensorValue) {
+        long millis = System.currentTimeMillis();
+        StringBuilder str = new StringBuilder();
+        str.append(millis).append("#")
+           .append(sensorType).append("#")
+           .append(sensorValue);
+
+        this.sendMessage(str.toString());
+    }
+
     public boolean isUsable() {
         return this.client != null && this.nodeId != null;
     }

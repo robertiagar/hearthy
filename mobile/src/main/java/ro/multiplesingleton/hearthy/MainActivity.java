@@ -36,7 +36,8 @@ public class MainActivity extends ActionBarActivity implements ServiceConnection
 
     @Override
     public void OnWatchMessageListener(String message) {
-
+        String parts[] = message.split("#");
+        SensorSample sample = SensorSample.toSample(parts[0], parts[1], parts[2]);
     }
 
     @Override
