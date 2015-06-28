@@ -31,7 +31,7 @@ public abstract class BaseMonitor  extends Service implements SensorEventListene
             Log.i(LOG_TAG, "Binding listener...");
             onChangeListener = listener;
             // return currently known value
-            listener.onValueChanged(currentValue);
+            listener.onValueChanged(sensorName, currentValue);
         }
     }
 
@@ -52,7 +52,7 @@ public abstract class BaseMonitor  extends Service implements SensorEventListene
         currentValue = newValue;
         if (this.onChangeListener != null) {
             Log.i(LOG_TAG, "sending new value to listener: " + newValue);
-            onChangeListener.onValueChanged(newValue);
+            onChangeListener.onValueChanged(sensorName, newValue);
         }
     }
 

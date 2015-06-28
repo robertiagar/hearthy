@@ -21,6 +21,7 @@
         </activity>
 
         <service android:name=".HeartBeatMonitor"/>
+        <service android:name=".StepMonitor"/>
 
     </application>
 

@@ -5,5 +5,5 @@ package ro.multiplesingleton.hearthy;
  */
 
 public interface OnChangeListener {
-    void onValueChanged(int newValue);
+    void onValueChanged(String sensorName, int newValue);
 }

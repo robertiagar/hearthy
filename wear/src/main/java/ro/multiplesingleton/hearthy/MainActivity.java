@@ -49,6 +49,11 @@ public class MainActivity extends Activity implements OnChangeListener, ServiceC
                 bindService(intent, MainActivity.this, Service.BIND_AUTO_CREATE);
                 startService(intent);
 
+                Log.i(LOG_TAG, "Binding  Step service...");
+                intent = new Intent(MainActivity.this, StepMonitor.class);
+                bindService(intent, MainActivity.this, Service.BIND_AUTO_CREATE);
+                startService(intent);
+
             }
 
         });
@@ -58,7 +63,7 @@ public class MainActivity extends Activity implements OnChangeListener, ServiceC
     public void onServiceConnected(ComponentName componentName, IBinder binder) {
         // set our change listener to get change events
         String className = componentName.getShortClassName();
-        if (className == "HeartBeatMonitor")
+        if (className == "HeartBeatMonitor" || className == "StepMonitor")
             ((HeartBeatMonitor.ServiceBinder) binder).setChangeListener(this);
         else if (className == "PhoneMessenger")
             this.phoneMessenger = ((PhoneMessenger.ServiceBinder) binder).getInstance();
@@ -70,12 +75,12 @@ public class MainActivity extends Activity implements OnChangeListener, ServiceC
     }
 
     @Override
-    public void onValueChanged(int newValue) {
-        String message = "New heartbeat: " + newValue;
+    public void onValueChanged(String sensorName, int newValue) {
+        String message = "New " + sensorName + ": " + newValue;
         mTextView.setText(message);
 
         if (this.phoneMessenger != null) {
-            this.phoneMessenger.sendMessage("heartbeat", newValue);
+            this.phoneMessenger.sendMessage(sensorName, newValue);
         }
     }
 }
