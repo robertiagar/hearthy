@@ -1,1 +1,1 @@
-include ':mobile', ':wear', ':HoloGraphLibrary'
+include ':mobile', ':wear'

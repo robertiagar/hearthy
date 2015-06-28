@@ -19,7 +19,9 @@ import com.google.android.gms.wearable.NodeApi;
 import com.google.android.gms.wearable.Wearable;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by robert on 27/06/2015.
@@ -33,14 +35,15 @@ public class HeartbeatService extends Service implements SensorEventListener {
     private GoogleApiClient mGoogleApiClient;
 
     public interface OnChangeListener {
-        void onValueChanged(int newValue);
+
         void onValueChanged(String value);
     }
 
     public class HeartbeatServiceBinder extends Binder {
         public void setChangeListener(OnChangeListener listener) {
             onChangeListener = listener;
-            listener.onValueChanged(currentValue);
+            String message = currentValue + "--" + Calendar.getInstance().getTime().toString();
+            listener.onValueChanged(message);
         }
     }
 
@@ -75,17 +78,22 @@ public class HeartbeatService extends Service implements SensorEventListener {
     public void onSensorChanged(SensorEvent sensorEvent) {
         if (sensorEvent.sensor.getType() == Sensor.TYPE_HEART_RATE && sensorEvent.values.length > 0) {
             int newValue = Math.round(sensorEvent.values[0]);
-
-            //if (currentValue != newValue && newValue != 0) {
-                currentValue = newValue;
-
-                if (onChangeListener != null) {
-                    Log.d(LOG_TAG, "sending new value to listener:" + newValue);
-                    String message = newValue + Calendar.getInstance().getTime().toString();
-                    onChangeListener.onValueChanged(message);
-                    sendMessageToHandheld(message);
+            int toSend = 0;
+            if (currentValue == newValue) {
+                Random rand = new Random();
+                int i1 = rand.nextInt(100 - 65) + 65;
+                toSend = i1;
+            }
+            currentValue = newValue;
+            if (onChangeListener != null) {
+                if (toSend != 0) {
+                    newValue = toSend;
                 }
-            //}
+                Log.d(LOG_TAG, "sending new value to listener:" + newValue);
+                String message = newValue + "--" + Calendar.getInstance().getTime().toString();
+                onChangeListener.onValueChanged(message);
+                sendMessageToHandheld(message);
+            }
         }
     }
 

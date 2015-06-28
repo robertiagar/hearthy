@@ -19,11 +19,15 @@ android {
     }
 }
 
+repositories {
+    maven { url "https://jitpack.io" }
+}
+
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     wearApp project(':wear')
     compile 'com.android.support:appcompat-v7:22.2.0'
     compile 'com.google.android.gms:play-services:7.5.0'
-    compile project(':HoloGraphLibrary')
+    compile 'com.github.PhilJay:MPAndroidChart:v2.1.0'
     compile 'com.github.satyan:sugar:1.3'
 }

@@ -9,6 +9,8 @@ import com.google.android.gms.wearable.MessageEvent;
 import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.WearableListenerService;
 
+import java.util.Calendar;
+
 /**
  * Created by robert on 27/06/2015.
  */
@@ -29,7 +31,8 @@ public class DataLayerListenerService extends WearableListenerService {
         if (handler != null) {
             Message message = new Message();
             Bundle bundle = new Bundle();
-            bundle.putCharSequence("message", currentValue);
+            String msg = currentValue + "--" + Calendar.getInstance().getTime().toString();
+            bundle.putCharSequence("message", msg);
             message.setData(bundle);
             handler.sendMessage(message);
         }
