@@ -12,30 +12,11 @@ import android.widget.TextView;
 import android.util.Log;
 
 
-class MainServiceConnection implements ServiceConnection {
-    private OnChangeListener listener;
-
-    public MainServiceConnection(OnChangeListener listener) {
-        this.listener = listener;
-    }
-
-    @Override
-    public void onServiceConnected(ComponentName componentName, IBinder binder) {
-        // set our change listener to get change events
-        ((HeartBeatMonitor.ServiceBinder) binder).setChangeListener(this.listener);
-    }
-
-    @Override
-    public void onServiceDisconnected(ComponentName componentName) {
-
-    }
-
-}
-
-public class MainActivity extends Activity implements OnChangeListener {
+public class MainActivity extends Activity implements OnChangeListener, ServiceConnection {
 
     private static final String LOG_TAG = "MainActivity";
 
+    private PhoneMessenger phoneMessenger;
     private TextView mTextView;
 
     @Override
@@ -53,14 +34,39 @@ public class MainActivity extends Activity implements OnChangeListener {
 
                 mTextView.setText("Updated Hello world!");
 
-                Log.i(LOG_TAG, "Binding service...");
-                Intent intent = new Intent(MainActivity.this, HeartBeatMonitor.class);
-                bindService(intent,
-                            new MainServiceConnection(MainActivity.this), Service.BIND_AUTO_CREATE);
+                Log.i(LOG_TAG, "Binding  PhoneMessenger service...");
+                Intent intent = new Intent(MainActivity.this, PhoneMessenger.class);
+                bindService(intent, MainActivity.this, Service.BIND_AUTO_CREATE);
                 startService(intent);
+
+                if (phoneMessenger != null) {
+                    Log.i(LOG_TAG, "Sending through Phone messenger..");
+                    phoneMessenger.sendMessage("Your watch says hello!");
+                }
+
+                Log.i(LOG_TAG, "Binding  HeartBeat service...");
+                intent = new Intent(MainActivity.this, HeartBeatMonitor.class);
+                bindService(intent, MainActivity.this, Service.BIND_AUTO_CREATE);
+                startService(intent);
+
             }
 
         });
+    }
+
+    @Override
+    public void onServiceConnected(ComponentName componentName, IBinder binder) {
+        // set our change listener to get change events
+        String className = componentName.getShortClassName();
+        if (className == "HeartBeatMonitor")
+            ((HeartBeatMonitor.ServiceBinder) binder).setChangeListener(this);
+        else if (className == "PhoneMessenger")
+            this.phoneMessenger = ((PhoneMessenger.ServiceBinder) binder).getInstance();
+    }
+
+    @Override
+    public void onServiceDisconnected(ComponentName componentName) {
+
     }
 
     @Override
