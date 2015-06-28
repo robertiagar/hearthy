@@ -9,6 +9,10 @@ import java.util.UUID;
  */
 public class WearDevice extends SugarRecord<WearDevice> {
 
+    public WearDevice(){
+
+    }
+
     private int deviceID;
     private UUID deviceGUID;
 

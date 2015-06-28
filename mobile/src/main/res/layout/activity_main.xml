@@ -13,14 +13,26 @@
         android:layout_height="wrap_content" />-->
 
     <TextView
-        android:id="@+id/text"
-        android:layout_alignParentEnd="true"
+        android:id="@+id/heart"
         android:layout_alignParentStart="true"
-        android:layout_width="match_parent"
-        android:layout_height="50dp">
+        android:layout_width="wrap_content"
+        android:layout_height="42dp"
+        android:textStyle="bold"
+        android:textSize="35dp">
+    </TextView>
+    <TextView
+        android:id="@+id/date"
+        android:layout_width="wrap_content"
+        android:layout_height="26dp"
+        android:textStyle="bold"
+        android:textSize="20dp"
+        android:layout_alignBottom="@+id/heart"
+        android:layout_toEndOf="@+id/heart">
     </TextView>
     <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/chart"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="fill_parent"
+        android:layout_below="@id/date"/>
+
 </RelativeLayout>
