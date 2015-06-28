@@ -94,6 +94,7 @@ public class PhoneMessenger extends Service {
     }
 
     private void _sendMessage(String message) {
+        Log.d(LOG_TAG, "Message to be sent: " + message);
         if (nodeId == null)
             return;
 

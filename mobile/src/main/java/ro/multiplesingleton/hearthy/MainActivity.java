@@ -9,9 +9,12 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.util.Log;
 
 
 public class MainActivity extends ActionBarActivity implements ServiceConnection, OnWatchMessageListener {
+
+    private static final String LOG_TAG = "MainActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +39,7 @@ public class MainActivity extends ActionBarActivity implements ServiceConnection
 
     @Override
     public void OnWatchMessageListener(String message) {
+        Log.d(LOG_TAG, "Received message: " + message);
         String parts[] = message.split("#");
         SensorSample sample = SensorSample.toSample(parts[0], parts[1], parts[2]);
     }
